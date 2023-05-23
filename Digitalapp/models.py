@@ -5,6 +5,7 @@ class SocietyMembers(models.Model):
     first_name=models.CharField(max_length=100)
     Last_name=models.CharField(max_length=100)
     Email=models.EmailField(max_length=100,unique=True)
+    password = models.CharField(max_length=100, null= True, blank=True, default='123')
     House_no=models.CharField(max_length=100)
     block_no=models.CharField(max_length=100)
     no_of_members=models.CharField(max_length=100)
@@ -14,6 +15,7 @@ class SocietyMembers(models.Model):
 class SocietySecretory(models.Model):
     name=models.CharField(max_length=100)
     email=models.CharField(max_length=100)
+    password = models.CharField(max_length=100,  null= True, blank=True, default='123')
     picture=models.FileField(upload_to='secretory.jpg',default='sad.jpg')
 
 
@@ -21,6 +23,7 @@ class Watchmen(models.Model):
     watchmen_name=models.CharField(max_length=100)  
     contact_no=models.CharField(max_length=100)
     email=models.EmailField(max_length=100,unique=True)
+    password = models.CharField(max_length=100,  null= True, blank=True, default='123')
     watchman_picture=models.FileField(upload_to='watchman.jpg',default='sad.jpg')
 
 class Visitor(models.Model):

@@ -14,12 +14,15 @@ def login(request):
     if request.method=='GET':
         return render(request,'login.html')
     else:
-        # try:
+        try:
             u1=SocietyMembers.objects.get(Email=request.POST['email'])
-            request.session['email']=request.POST['email']
-            return render(request,'dashboard.html',{"userdata":u1})
-        # except:
-            # return render(request,'login.html',{"msg":'email does not exist'})    
+            if u1.password == request.POST['password']:
+                request.session['email']=request.POST['email']
+                return render(request,'dashboard.html',{"userdata":u1})
+            else:
+                return render(request, 'login.html', {'msg': 'Invalid Password'})
+        except:
+            return render(request,'login.html',{"msg":'email does not exist'})    
 def myprofile(request):
     try:
         u1=SocietyMembers.objects.get(Email=request.session['email'])
@@ -44,12 +47,14 @@ def register(request):
             first_name=request.POST['first_name'],
             Last_name=request.POST['Last_name'],
             Email=request.POST['email'],
+            password=request.POST['password'],
             House_no=request.POST['House_no'],
             no_of_members=request.POST['no_of_members'],
             picture_of_owner=request.FILES['picture'],
             block_no=request.POST['block_no']
         ) 
         return render(request,'login.html')   
+    
 def logout(request):
     del request.session['email']
     return redirect('login')
@@ -97,9 +102,12 @@ def secretorylogin(request):
         return render(request,'secretorylogin.html')
     else:
         try:
-            u1=SocietySecretory.objects.get(email=request.POST['email'])   
-            request.session['email']=request.POST['email'] 
-            return render(request,'secretory_dashboard.html',{"userdata1":u1})      
+            u1=SocietySecretory.objects.get(email=request.POST['email']) 
+            if u1.password == request.POST['password']:  
+                request.session['email']=request.POST['email'] 
+                return render(request,'secretory_dashboard.html',{"userdata1":u1})
+            else:
+                return render(request, 'login.html', {'msg': 'Invalid Password'})      
 
         except:
             return render(request,"secretorylogin.html",{'msg':"email does not exist"})      
@@ -121,7 +129,7 @@ def secretory_register(request):
         SocietySecretory.objects.create(
             name=request.POST['name'],
             email=request.POST['email'],
-            
+            password=request.POST['password'],
             picture=request.FILES['picture']
         ) 
         return render(request,'secretorylogin.html')
@@ -193,9 +201,12 @@ def watchman_login(request):
         return render(request,'watchman_login.html')
     else:
         try:
-            u1=Watchmen.objects.get(email=request.POST['email'])   
-            request.session['email']=request.POST['email'] 
-            return render(request,'watchman_profile.html',{"userdata1":u1})      
+            u1=Watchmen.objects.get(email=request.POST['email'])
+            if u1.password == request.POST['password']:   
+                request.session['email']=request.POST['email'] 
+                return render(request,'watchman_profile.html',{"userdata1":u1}) 
+            else:
+                return render(request, 'login.html', {'msg': 'Invalid Password'})     
 
         except:
             return render(request,"watchman_login.html",{'msg':"email does not exist"})  
@@ -255,6 +266,7 @@ def watchman_register(request):
             watchmen_name=request.POST['name'],
             contact_no=request.POST['contact'],
             email=request.POST['email'],
+            password=request.POST['password'],
             watchman_picture=request.FILES['picture']
         ) 
         return render(request,'watchman_login.html')   
